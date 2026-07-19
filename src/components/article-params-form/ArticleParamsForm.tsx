@@ -15,12 +15,21 @@ import {
 	fontFamilyOptions,
 	fontSizeOptions,
 } from 'src/constants/articleProps';
+import type { ArticleStateType } from 'src/constants/articleProps';
 
 import styles from './ArticleParamsForm.module.scss';
 
-export const ArticleParamsForm = () => {
+type ArticleParamsFormProps = {
+	articleState: ArticleStateType;
+	onChange: (articleState: ArticleStateType) => void;
+};
+
+export const ArticleParamsForm = ({
+	articleState,
+	onChange,
+}: ArticleParamsFormProps) => {
 	const [isOpen, setIsOpen] = useState(false);
-	const [formState, setFormState] = useState(defaultArticleState);
+	const [formState, setFormState] = useState(articleState);
 	const asideRef = useRef<HTMLElement>(null);
 	const arrowButtonRef = useRef<HTMLDivElement>(null);
 
@@ -43,6 +52,16 @@ export const ArticleParamsForm = () => {
 		return () => document.removeEventListener('mousedown', handleOutsideClick);
 	}, []);
 
+	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		onChange(formState);
+	};
+
+	const handleReset = () => {
+		setFormState(defaultArticleState);
+		onChange(defaultArticleState);
+	};
+
 	return (
 		<>
 			<div ref={arrowButtonRef}>
@@ -58,8 +77,8 @@ export const ArticleParamsForm = () => {
 				})}>
 				<form
 					className={styles.form}
-					onSubmit={(event) => event.preventDefault()}
-					onReset={() => setFormState(defaultArticleState)}>
+					onSubmit={handleSubmit}
+					onReset={handleReset}>
 					<Text as='h2' size={31} weight={800} uppercase>
 						Задайте параметры
 					</Text>
