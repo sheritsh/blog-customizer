@@ -34,6 +34,10 @@ export const ArticleParamsForm = ({
 	const arrowButtonRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
+		if (!isOpen) {
+			return;
+		}
+
 		const handleOutsideClick = (event: MouseEvent) => {
 			if (!(event.target instanceof Node)) {
 				return;
@@ -50,7 +54,7 @@ export const ArticleParamsForm = ({
 		document.addEventListener('mousedown', handleOutsideClick);
 
 		return () => document.removeEventListener('mousedown', handleOutsideClick);
-	}, []);
+	}, [isOpen]);
 
 	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
